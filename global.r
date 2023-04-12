@@ -7,6 +7,7 @@ library(lubridate)
 
 # Load dataset
 starbucks <- read.csv("Starbucks_stock_history.csv")
+starbucks <- starbucks[,-ncol(starbucks)]
 starbucks$Date <- as.POSIXct(starbucks$Date)
 
-choices <- c("Open","High","Low","Close","Volume","Dividends","Stock Splits")
+choices <- c("Open","High","Low","Close","Volume","Dividends")

@@ -34,7 +34,10 @@ server <- function(input, output) {
   output$grafico_linha <- renderPlot({
     dados <- dados_filtrados1()
     ggplot(dados, aes(x = Date, y = !!sym(input$classe))) +
-      geom_line() +
+      geom_line( 
+        color="blue", 
+        alpha=0.9
+      ) +
       labs(x = "Data", y = input$classe) +
       ggtitle(paste("Série temporal de", input$classe))
   })
@@ -43,7 +46,11 @@ server <- function(input, output) {
   output$histograma <- renderPlot({
     dados <- dados_filtrados1()
     ggplot(dados, aes(x = !!sym(input$classe))) +
-      geom_histogram() +
+      geom_histogram(
+        binwidth=2.5, 
+        fill="blue", 
+        color="darkblue", 
+        alpha=0.9) +
       labs(x = input$classe, y = "Frequência") +
       ggtitle(paste("Histograma de", input$classe))
   })
@@ -52,7 +59,13 @@ server <- function(input, output) {
   output$boxplot <- renderPlot({
     dados <- dados_filtrados1()
     ggplot(dados, aes(y = !!sym(input$classe))) +
-      geom_boxplot() +
+      geom_boxplot(
+        color="blue",
+        fill="blue",
+        alpha=0.2,
+        outlier.colour="red",
+        outlier.size=3
+      ) +
       labs(y = input$classe) +
       ggtitle(paste("Boxplot de", input$classe))
   })
@@ -82,12 +95,33 @@ server <- function(input, output) {
   })
 
   # -[FALTA] Gráfico em barra das médias de cada série (isto é, você tira o valor da média de cada uma das séries e com esses valores faz o gráfico)
+  output$grafico_barra <- renderPlot({
+    dados <- dados_filtrados2()
+    medias_dados <- data.frame(
+      medias=c(
+        mean(as.numeric(dados$Open)),
+        mean(as.numeric(dados$High)),
+        mean(as.numeric(dados$Low)),
+        mean(as.numeric(dados$Close)),
+        mean(as.numeric(dados$Volume)),
+        mean(as.numeric(dados$Dividends))
+      )
+    )
+    ggplot(medias_dados) +
+      geom_bar(aes(x = "Dividends", y = mean(as.numeric(dados$Dividends))), stat = "identity") + 
+      geom_bar(aes(x = "Close", y = mean(as.numeric(dados$Close))), stat = "identity") +
+      geom_bar(aes(x = "Low", y = mean(as.numeric(dados$Low))), stat = "identity") +
+      geom_bar(aes(x = "High", y = mean(as.numeric(dados$High))), stat = "identity") +
+      geom_bar(aes(x = "Open", y = mean(as.numeric(dados$Open))), stat = "identity")
+  })
   
   # Scatterplot das séries
   output$scatterplot <- renderPlot({
     dados <- dados_filtrados2()
     ggplot(dados, aes(x = !!sym(input$classe1), y = !!sym(input$classe2))) +
-      geom_point() +
+      geom_point(
+        color="blue"
+      ) +
       ggtitle(paste("Scatterplot das séries", input$classe1, "e", input$classe2))
   })
   
