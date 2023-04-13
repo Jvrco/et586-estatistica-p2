@@ -11,13 +11,25 @@ server <- function(input, output) {
     starbucks %>%
       filter(Date >= input$datas2[1] & Date <= input$datas2[2])
   })
+  
+  # função pra calcular moda
+  
   # ABA 1
   
   # Uma tabela, contendo nome da classe, moda, média mediana e desvio padrão da série temporal a ser analisada
   output$tabela1 <- renderTable({
     dados <- dados_filtrados1()
+    moda <- dados %>%
+      count(!!sym(input$classe)) %>%
+      filter(n == max(n)) %>%
+      select(!!sym(input$classe)) %>%
+      unique() 
+    
+    moda_formatted <- paste(moda, collapse = "; ")
+    moda_formatted <- gsub("c\\(|\\)", "", moda_formatted)
+    
     resumo <- dados %>% 
-      summarise(Moda = mode(!!sym(input$classe)),
+      summarise(Moda = moda_formatted,
                 Média = mean(!!sym(input$classe)),
                 Mediana = median(!!sym(input$classe)),
                 DesvioPadrão = sd(!!sym(input$classe)),
@@ -98,21 +110,20 @@ server <- function(input, output) {
   output$grafico_barra <- renderPlot({
     dados <- dados_filtrados2()
     medias_dados <- data.frame(
-      medias=c(
+      Variável = choices,
+      Média = c(
         mean(as.numeric(dados$Open)),
         mean(as.numeric(dados$High)),
         mean(as.numeric(dados$Low)),
         mean(as.numeric(dados$Close)),
-        mean(as.numeric(dados$Volume)),
         mean(as.numeric(dados$Dividends))
       )
     )
-    ggplot(medias_dados) +
-      geom_bar(aes(x = "Dividends", y = mean(as.numeric(dados$Dividends))), stat = "identity") + 
-      geom_bar(aes(x = "Close", y = mean(as.numeric(dados$Close))), stat = "identity") +
-      geom_bar(aes(x = "Low", y = mean(as.numeric(dados$Low))), stat = "identity") +
-      geom_bar(aes(x = "High", y = mean(as.numeric(dados$High))), stat = "identity") +
-      geom_bar(aes(x = "Open", y = mean(as.numeric(dados$Open))), stat = "identity")
+    ggplot(medias_dados, aes(x = Variável, y = Média)) +
+      geom_bar(stat = "identity", fill = "blue", color = "darkblue", alpha = 0.9) +
+      geom_text(aes(label = round(Média, 2)), vjust = -0.5, color = "black", size = 4) +
+      labs(x = "Variável", y = "Média") +
+      ggtitle("Médias das Variáveis")
   })
   
   # Scatterplot das séries
