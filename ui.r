@@ -29,7 +29,6 @@ ui <- dashboardPage(
               tags$li("High: Preço mais alto alcançado pela ação no pregão"),
               tags$li("Low: Preço mais baixo alcançado pela ação no pregão"),
               tags$li("Close: Preço da ação no momento do fechamento do pregão"),
-              tags$li("Volume: Quantidade de movimentações (compras e vendas de ações)"),
               tags$li("Dividends: Participação no lucro da empresa (lucro destinado à divisão entre acionistas dividido pelo número de ações)"),
             )
           )
@@ -85,7 +84,6 @@ ui <- dashboardPage(
               tags$li("High: Preço mais alto alcançado pela ação no pregão"),
               tags$li("Low: Preço mais baixo alcançado pela ação no pregão"),
               tags$li("Close: Preço da ação no momento do fechamento do pregão"),
-              tags$li("Volume: Quantidade de movimentações (compras e vendas de ações)"),
               tags$li("Dividends: Participação no lucro da empresa (lucro destinado à divisão entre acionistas dividido pelo número de ações)"),
             )
           )
